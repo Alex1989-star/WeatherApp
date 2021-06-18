@@ -64,12 +64,12 @@
 		A253F2CD267C961A0049911B /* WeatherApp */ = {
 			isa = PBXGroup;
 			children = (
+				A2B233AB267CC142000F9A9E /* Services */,
 				A253F2E2267C96D90049911B /* Application */,
 				A253F2E3267C96E10049911B /* Storyboards */,
 				A253F2E7267C97020049911B /* Resources */,
 				A253F2E8267C974B0049911B /* Extensions */,
 				A253F2E5267C96F30049911B /* Models */,
-				A253F2E6267C96F90049911B /* Services */,
 				A253F2EF267C9C8D0049911B /* Views */,
 				A253F2E4267C96E90049911B /* ViewControllers */,
 			);
@@ -111,13 +111,6 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		A253F2E6267C96F90049911B /* Services */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Services;
-			sourceTree = "<group>";
-		};
 		A253F2E7267C97020049911B /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -141,6 +134,13 @@
 				A253F2F0267C9CAE0049911B /* CityTableViewCell.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		A2B233AB267CC142000F9A9E /* Services */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
