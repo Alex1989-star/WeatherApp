@@ -26,6 +26,8 @@ class CityTableViewController: UITableViewController {
         configureNavigationBar()
         configureSearchBar()
         configureTableView()
+        
+        setupNavigationBar()
     }
     
     // MARK: - Methods
@@ -101,5 +103,11 @@ extension CityTableViewController: UISearchResultsUpdating {
         print("Entered: \(searchText)")
     }
     
+    private func setupNavigationBar() {
+        let searchController = UISearchController(searchResultsController: nil)
+        searchController.searchResultsUpdater = self
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
+    }
     
 }
