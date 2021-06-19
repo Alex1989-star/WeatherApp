@@ -15,6 +15,7 @@ enum Identifier: String {
 class CityTableViewController: UITableViewController {
     // MARK: - Properties
     private let searchController = UISearchController(searchResultsController: nil)
+
     private var cities: [City]! // массив с моделями городов
 
     // MARK: - Life Cycle
@@ -26,6 +27,9 @@ class CityTableViewController: UITableViewController {
         configureNavigationBar()
         configureSearchBar()
         configureTableView()
+        
+        //setupNavigationBar()
+        
     }
     
     // MARK: - Methods
@@ -88,6 +92,7 @@ extension CityTableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: Identifier.cityCell.rawValue, for: indexPath) as! CityTableViewCell
         let cityWeather = cities[indexPath.row]
         
+        
         cell.cityNameLabel.text = cityWeather.cityName
         
         // тут запрашиваем у сервиса погоду для города в списке
@@ -134,7 +139,7 @@ extension CityTableViewController {
 }
 
 extension CityTableViewController: UISearchResultsUpdating {
-    func updateSearchResults(for searchController: UISearchController) {
+     func updateSearchResults(for searchController: UISearchController) {
         guard let searchText = searchController.searchBar.text else {
             return
         }
@@ -142,7 +147,16 @@ extension CityTableViewController: UISearchResultsUpdating {
         print("Entered: \(searchText)")
     }
     
+    private func setupNavigationBar() {
+        let searchController = UISearchController(searchResultsController: nil)
+        searchController.searchResultsUpdater = self
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+       
+    }
+    
     
 }
-
-
