@@ -22,4 +22,3 @@ struct City {
     }
         
 }
-

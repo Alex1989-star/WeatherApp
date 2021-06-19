@@ -13,6 +13,7 @@ enum Identifier: String {
 class CityTableViewController: UITableViewController {
     // MARK: - Properties
     private let searchController = UISearchController(searchResultsController: nil)
+
     private var cities: [City]! // массив с моделями городов
 
     // MARK: - Life Cycle
@@ -24,6 +25,9 @@ class CityTableViewController: UITableViewController {
         configureNavigationBar()
         configureSearchBar()
         configureTableView()
+        
+        //setupNavigationBar()
+        
     }
     
     // MARK: - Methods
@@ -50,17 +54,17 @@ class CityTableViewController: UITableViewController {
     @objc private func addCityButtonTapped() {
         let alert = UIAlertController(title: "Введите название города", message: nil, preferredStyle: .alert)
         
-        let appendBut = UIAlertAction(title: "Добавить", style: .default) {
+        let appendButton = UIAlertAction(title: "Добавить", style: .default) {
             (action) in
-//            Получаем текст из TextField
+        //    Получаем текст из TextField
 //            let textField = alert.textFields?.first
             
         }
         
-        let cancelBut = UIAlertAction(title: "Отмена", style: .cancel, handler: nil)
+        let cancelButton = UIAlertAction(title: "Отмена", style: .cancel, handler: nil)
         
-        alert.addAction(appendBut)
-        alert.addAction(cancelBut)
+        alert.addAction(appendButton)
+        alert.addAction(cancelButton)
         
         alert.addTextField {(textField) in
             textField.placeholder = "Название города"
@@ -85,6 +89,7 @@ extension CityTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Identifier.cityCell.rawValue, for: indexPath) as! CityTableViewCell
         let cityWeather = cities[indexPath.row]
+        
         
         cell.cityNameLabel.text = cityWeather.cityName
         
@@ -132,7 +137,7 @@ extension CityTableViewController {
 }
 
 extension CityTableViewController: UISearchResultsUpdating {
-    func updateSearchResults(for searchController: UISearchController) {
+     func updateSearchResults(for searchController: UISearchController) {
         guard let searchText = searchController.searchBar.text else {
             return
         }
@@ -140,7 +145,16 @@ extension CityTableViewController: UISearchResultsUpdating {
         print("Entered: \(searchText)")
     }
     
+    private func setupNavigationBar() {
+        let searchController = UISearchController(searchResultsController: nil)
+        searchController.searchResultsUpdater = self
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+       
+    }
+    
     
 }
-
-
