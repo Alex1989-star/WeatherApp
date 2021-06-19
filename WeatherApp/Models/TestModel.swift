@@ -7,24 +7,18 @@
 
 import Foundation
 
-//
-struct CityWeather {
+struct City {
     let cityName: String
-    let description: String
-    let temperature: Float
-    let weatherIcon: String
+    var weatherData: Weather?
     
-    static func getDemoWeather() -> [CityWeather] {
+    static func getDemoCities() -> [City] {
         let data = [
-            CityWeather(cityName: "Москва", description: "Ясно", temperature: 29.2, weatherIcon: "01d"),
-            CityWeather(cityName: "Санкт-Петербург", description: "Пасмурно", temperature: 22.7, weatherIcon: "02d"),
-            CityWeather(cityName: "Нижний Новгород", description: "Облачно", temperature: 28.5, weatherIcon: "03d"),
-            CityWeather(cityName: "Новосибирск", description: "Дождь", temperature: 30.0, weatherIcon: "01n"),
-            CityWeather(cityName: "Владивосток", description: "Ясно", temperature: 29.1, weatherIcon: "02n")
+            City(cityName: "Москва", weatherData: nil),
+            City(cityName: "Санкт-Петербург", weatherData: nil),
+            City(cityName: "Новосибирск", weatherData: nil)
         ]
         
         return data
     }
+        
 }
-
-

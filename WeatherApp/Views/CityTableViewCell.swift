@@ -15,6 +15,9 @@ class CityTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        
+        weatherDescriptionLabel.text = ""
+        temperatureLabel.text = ""
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
