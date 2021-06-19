@@ -16,7 +16,7 @@ class CityTableViewController: UITableViewController {
     // MARK: - Properties
     private let searchController = UISearchController(searchResultsController: nil)
     private var cities: [CityWeather]!
-
+    
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,7 +27,8 @@ class CityTableViewController: UITableViewController {
         configureSearchBar()
         configureTableView()
         
-        setupNavigationBar()
+        //setupNavigationBar()
+        
     }
     
     // MARK: - Methods
@@ -72,6 +73,7 @@ extension CityTableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: Identifier.cityCell.rawValue, for: indexPath) as! CityTableViewCell
         let cityWeather = cities[indexPath.row]
         
+        
         cell.cityNameLabel.text = cityWeather.cityName
         cell.weatherDescriptionLabel.text = cityWeather.description
         cell.temperatureLabel.text = String(format: "%.1f", cityWeather.temperature)
@@ -95,7 +97,7 @@ extension CityTableViewController {
 }
 
 extension CityTableViewController: UISearchResultsUpdating {
-    func updateSearchResults(for searchController: UISearchController) {
+     func updateSearchResults(for searchController: UISearchController) {
         guard let searchText = searchController.searchBar.text else {
             return
         }
@@ -110,4 +112,10 @@ extension CityTableViewController: UISearchResultsUpdating {
         navigationItem.hidesSearchBarWhenScrolling = false
     }
     
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+       
+    }
+    
+    
 }
+
