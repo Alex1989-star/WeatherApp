@@ -2,8 +2,6 @@
 //  DetailsViewController.swift
 //  WeatherApp
 //
-//  Created by SERGEY VOROBEV on 18.06.2021.
-//
 
 import UIKit
 
