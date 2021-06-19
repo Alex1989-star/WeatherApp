@@ -27,6 +27,7 @@ class DetailsViewController: UIViewController {
         
         configureView()
         configureByDay()
+        print("test")
     }
     
     // MARK: - Methods
