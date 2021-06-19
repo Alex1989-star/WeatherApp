@@ -6,17 +6,22 @@
 //
 
 import UIKit
+enum UserActions: String {
+    case wearVeryWarmClothes = "Рекмендуем одеть две пары носков, штаны с начесом и теплую куртку - на улице холодно🥶"
+    case wearWarmClothes = "Рекомендуем одеть демисизонную куртку и штаны - точно не замерзните 😉"
+    case wearLightClothes = "Рекомендуем одеть легкую куртку или кофту 💨"
+    case eatIceCreamAndSwim = "Рекомендуем раздеться, есть побольше мороженного и купаться ☀️"
+}
 
 class DetailsViewController: UIViewController {
-    
-    var city: City? // Модель города
-    private var cityWeaher: WeatherElement? // Модель погоды города
     
     @IBOutlet weak var cityNameLabel: UILabel!
     @IBOutlet weak var weatherDescriptionLabel: UILabel!
     @IBOutlet weak var temperatureLabel: UILabel!
     
     @IBOutlet weak var weatherImage: UIImageView!
+    
+    var city: City? // Модель города
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -26,40 +31,78 @@ class DetailsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        cityDataInitialize()
-        
         configureView()
         configureByDay()
     }
     
     // MARK: - Methods
-    private func cityDataInitialize() {
-        guard let cityWeather = city?.weatherData?.weather,
-              cityWeather.indices.contains(0) else {
-            return
+
+    private func configureView() {
+       
+        createLabelForUserActions()
+        
+        cityNameLabel.text = city?.cityName
+       
+        if let temp = city?.weatherData?.main.temp {
+            let newTempString = String(format: "%.1f", temp)
+        temperatureLabel.text = "\(newTempString)º"
         }
         
-        cityWeaher = cityWeather[0]
+        if city?.weatherData!.weather.indices != nil {
+//            достаем экземпляр структуры WeatherElement
+            let weather = city?.weatherData!.weather[0]
+          
+            weatherDescriptionLabel.text = weather?.weatherDescription
+          
+            guard let iconFromApi = weather?.icon else {return}
+            weatherImage.image = UIImage(named: iconFromApi)
+           
+        }
     }
     
-    private func configureView() {
+    //    делаем лейбл для подсказок пользователю
+    @discardableResult private func createLabelForUserActions() -> UILabel{
         
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
+        label.center = CGPoint(x: view.frame.midX, y: view.frame.maxY - 100)
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.font = UIFont(name: "Halvetica", size: 22)
+        
+        //       в зависимости от градусов делаем подсказки пользователю
+        if let temp = city?.weatherData?.main.temp {
+            switch Int(temp) {
+            case 0...9:
+                label.text = UserActions.wearVeryWarmClothes.rawValue
+            case 10...15:
+                label.text = UserActions.wearWarmClothes.rawValue
+            case 16...23:
+                label.text = UserActions.wearLightClothes.rawValue
+            case 23...50:
+                label.text = UserActions.eatIceCreamAndSwim.rawValue
+            default:
+                break
+            }
+        }
+        
+//      добавляем лейбл на экран
+         self.view.addSubview(label)
+        
+//        возвращаем лейбл, чтобы потом менять его цвет со всеми лейблами
+        return label
     }
     
     private func configureByDay() {
-        guard let cityWeaher = cityWeaher else {
-            return
-        }
-        
-        let labels = [cityNameLabel, weatherDescriptionLabel, temperatureLabel]
+
+        let userActionLabel = createLabelForUserActions()
+        let labels = [cityNameLabel, weatherDescriptionLabel, temperatureLabel, userActionLabel]
         let labelTextColor: UIColor?
-        
-        let weatherIcon = String(cityWeaher.icon.suffix(1))
-        
-       // if cityWeather.weatherData?.weather.indices.contains(0) {
-           // let weatherIcon = String(cityWeather.weatherData.weatherIcon.suffix(1))
-       // }
-        
+
+        if city?.weatherData!.weather.indices != nil {
+//            достаем экземпляр структуры WeatherElement
+            let weather = city?.weatherData!.weather[0]
+            let weatherIcon = String(weather!.icon.suffix(1))
+    
         switch weatherIcon {
         case "d":
             view.setGradientBackground(from: UIColor(named: "dayGradientStart")!, to: UIColor(named: "dayGradientEnd")!)
@@ -81,4 +124,5 @@ class DetailsViewController: UIViewController {
         }
         
     }
+}
 }
