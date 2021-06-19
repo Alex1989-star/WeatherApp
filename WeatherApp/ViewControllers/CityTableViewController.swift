@@ -15,13 +15,13 @@ enum Identifier: String {
 class CityTableViewController: UITableViewController {
     // MARK: - Properties
     private let searchController = UISearchController(searchResultsController: nil)
-    private var cities: [CityWeather]!
+    private var cities: [City]! // массив с моделями городов
 
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        cities = CityWeather.getDemoWeather()
+        cities = City.getDemoCities()
 
         configureNavigationBar()
         configureSearchBar()
@@ -89,9 +89,32 @@ extension CityTableViewController {
         let cityWeather = cities[indexPath.row]
         
         cell.cityNameLabel.text = cityWeather.cityName
-        cell.weatherDescriptionLabel.text = cityWeather.description
-        cell.temperatureLabel.text = String(format: "%.1f", cityWeather.temperature)
         
+        // тут запрашиваем у сервиса погоду для города в списке
+        WeatherService.shared.fetchCityWeather(for: cityWeather.cityName) { result, error in
+            guard error == nil, let result = result else {
+                return
+            }
+            
+            self.cities[indexPath.row].weatherData = result // тут в модель погоды города записывааем полученные от АПИ данные
+            
+            
+            // обновлять UI можно только в главном потоке так как запрос к АПИ происходит асинхронно
+            DispatchQueue.main.async {
+                guard let cityWeaherData = self.cities[indexPath.row].weatherData else {
+                    return
+                }
+                
+                if cityWeaherData.weather.indices.contains(0) {
+                    let weather = cityWeaherData.weather[0]
+                    
+                    cell.weatherDescriptionLabel.text = weather.weatherDescription
+                    cell.temperatureLabel.text = String(format: "%.1f", result.main.temp)
+                }
+              
+            }
+        }
+    
         return cell
     }
     
@@ -104,7 +127,7 @@ extension CityTableViewController {
             return
         }
         
-        detailsVC.weather = cities[indexPath.row]
+        detailsVC.city = cities[indexPath.row]
         
         navigationController?.pushViewController(detailsVC, animated: true)
     }

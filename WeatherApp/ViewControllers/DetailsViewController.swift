@@ -9,7 +9,8 @@ import UIKit
 
 class DetailsViewController: UIViewController {
     
-    var weather: CityWeather!
+    var city: City? // Модель города
+    private var cityWeaher: WeatherElement? // Модель погоды города
     
     @IBOutlet weak var cityNameLabel: UILabel!
     @IBOutlet weak var weatherDescriptionLabel: UILabel!
@@ -25,20 +26,39 @@ class DetailsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        cityDataInitialize()
+        
         configureView()
         configureByDay()
-        print("test")
     }
     
     // MARK: - Methods
+    private func cityDataInitialize() {
+        guard let cityWeather = city?.weatherData?.weather,
+              cityWeather.indices.contains(0) else {
+            return
+        }
+        
+        cityWeaher = cityWeather[0]
+    }
+    
     private func configureView() {
         
     }
     
     private func configureByDay() {
+        guard let cityWeaher = cityWeaher else {
+            return
+        }
+        
         let labels = [cityNameLabel, weatherDescriptionLabel, temperatureLabel]
         let labelTextColor: UIColor?
-        let weatherIcon = String(weather.weatherIcon.suffix(1))
+        
+        let weatherIcon = String(cityWeaher.icon.suffix(1))
+        
+       // if cityWeather.weatherData?.weather.indices.contains(0) {
+           // let weatherIcon = String(cityWeather.weatherData.weatherIcon.suffix(1))
+       // }
         
         switch weatherIcon {
         case "d":
