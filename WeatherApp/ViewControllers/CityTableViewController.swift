@@ -52,17 +52,17 @@ class CityTableViewController: UITableViewController {
     @objc private func addCityButtonTapped() {
         let alert = UIAlertController(title: "Введите название города", message: nil, preferredStyle: .alert)
         
-        let appendBut = UIAlertAction(title: "Добавить", style: .default) {
+        let appendButton = UIAlertAction(title: "Добавить", style: .default) {
             (action) in
-//            Получаем текст из TextField
+        //    Получаем текст из TextField
 //            let textField = alert.textFields?.first
             
         }
         
-        let cancelBut = UIAlertAction(title: "Отмена", style: .cancel, handler: nil)
+        let cancelButton = UIAlertAction(title: "Отмена", style: .cancel, handler: nil)
         
-        alert.addAction(appendBut)
-        alert.addAction(cancelBut)
+        alert.addAction(appendButton)
+        alert.addAction(cancelButton)
         
         alert.addTextField {(textField) in
             textField.placeholder = "Название города"
