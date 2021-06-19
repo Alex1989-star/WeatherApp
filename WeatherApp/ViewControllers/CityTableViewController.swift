@@ -14,9 +14,11 @@ enum Identifier: String {
 
 class CityTableViewController: UITableViewController {
     // MARK: - Properties
-    private let searchController = UISearchController(searchResultsController: nil)
+    private var searchController = UISearchController(searchResultsController: nil)
 
     private var cities: [City]! // массив с моделями городов
+    
+    private var filteredCities = [City]()
 
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -28,8 +30,7 @@ class CityTableViewController: UITableViewController {
         configureSearchBar()
         configureTableView()
         
-        //setupNavigationBar()
-        
+        filteredCities = cities
     }
     
     // MARK: - Methods
@@ -47,6 +48,9 @@ class CityTableViewController: UITableViewController {
         
         navigationItem.searchController = searchController
         definesPresentationContext = true
+        
+        searchController = UISearchController(searchResultsController: nil)
+        navigationItem.hidesSearchBarWhenScrolling = false
     }
     
     private func configureTableView() {
@@ -84,15 +88,13 @@ extension CityTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        return cities.count
+        return self.filteredCities.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Identifier.cityCell.rawValue, for: indexPath) as! CityTableViewCell
+
         let cityWeather = cities[indexPath.row]
-        
-        
         cell.cityNameLabel.text = cityWeather.cityName
         
         // тут запрашиваем у сервиса погоду для города в списке
@@ -136,27 +138,17 @@ extension CityTableViewController {
         
         navigationController?.pushViewController(detailsVC, animated: true)
     }
+    
 }
 
 extension CityTableViewController: UISearchResultsUpdating {
      func updateSearchResults(for searchController: UISearchController) {
-        guard let searchText = searchController.searchBar.text else {
-            return
+        if searchController.searchBar.text! == "" {
+            filteredCities = cities
+        } else {
+            filteredCities = cities.filter({ $0.cityName.lowercased().contains(searchController.searchBar.text!.lowercased()) })
         }
-        
-        print("Entered: \(searchText)")
+        self.tableView.reloadData()
+
     }
-    
-    private func setupNavigationBar() {
-        let searchController = UISearchController(searchResultsController: nil)
-        searchController.searchResultsUpdater = self
-        navigationItem.searchController = searchController
-        navigationItem.hidesSearchBarWhenScrolling = false
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-       
-    }
-    
-    
 }
