@@ -63,6 +63,7 @@ class NetworkManager {
             do {
                 // декодируем данные в модель и возвращаем success. JSONDecoder.decode может вернуть ошибку во время декодирования, поэтому он требует чтобы было обернуто в do { ... } catch ( ... ) { ... }
                 let jsonData = try JSONDecoder().decode(T.self, from: data)
+            
                 completionHandler(.success(data: jsonData))
             } catch (let error) {
                 completionHandler(.failure(error: .jsonError, message: "Json parse error: \(error.localizedDescription)"))

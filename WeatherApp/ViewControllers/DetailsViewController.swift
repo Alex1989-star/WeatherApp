@@ -4,6 +4,7 @@
 //
 
 import UIKit
+
 enum UserActions: String {
     case wearVeryWarmClothes = "Рекмендуем одеть две пары носков, штаны с начесом и теплую куртку - на улице холодно🥶"
     case wearWarmClothes = "Рекомендуем одеть демисизонную куртку и штаны - точно не замерзните 😉"
@@ -34,42 +35,40 @@ class DetailsViewController: UIViewController {
     }
     
     // MARK: - Methods
-
     private func configureView() {
-       
         createLabelForUserActions()
         
         cityNameLabel.text = city?.cityName
-       
+        
         if let temp = city?.weatherData?.main.temp {
             let newTempString = String(format: "%.1f", temp)
-        temperatureLabel.text = "\(newTempString)º"
+            temperatureLabel.text = "\(newTempString)º"
         }
         
+        // достаем экземпляр структуры WeatherElement
         if city?.weatherData!.weather.indices != nil {
-//            достаем экземпляр структуры WeatherElement
             let weather = city?.weatherData!.weather[0]
-          
+            
             weatherDescriptionLabel.text = weather?.weatherDescription
-          
-            guard let iconFromApi = weather?.icon else {return}
+            
+            guard let iconFromApi = weather?.icon else { return }
+            
             weatherImage.image = UIImage(named: iconFromApi)
-           
         }
     }
     
-    //    делаем лейбл для подсказок пользователю
-    @discardableResult private func createLabelForUserActions() -> UILabel{
-        
+    // делаем лейбл для подсказок пользователю
+    @discardableResult private func createLabelForUserActions() -> UILabel {
         let label = UILabel(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
+        
         label.center = CGPoint(x: view.frame.midX, y: view.frame.maxY - 100)
         label.textAlignment = .center
         label.numberOfLines = 0
         label.font = UIFont(name: "Halvetica", size: 22)
         
-        //       в зависимости от градусов делаем подсказки пользователю
-        if let temp = city?.weatherData?.main.temp {
-            switch Int(temp) {
+        // в зависимости от градусов делаем подсказки пользователю
+        if let temperature = city?.weatherData?.main.temp {
+            switch Int(temperature) {
             case 0...9:
                 label.text = UserActions.wearVeryWarmClothes.rawValue
             case 10...15:
@@ -83,44 +82,43 @@ class DetailsViewController: UIViewController {
             }
         }
         
-//      добавляем лейбл на экран
-         self.view.addSubview(label)
+        // добавляем лейбл на экран
+        self.view.addSubview(label)
         
-//        возвращаем лейбл, чтобы потом менять его цвет со всеми лейблами
+        // возвращаем лейбл, чтобы потом менять его цвет со всеми лейблами
         return label
     }
     
     private func configureByDay() {
-
         let userActionLabel = createLabelForUserActions()
         let labels = [cityNameLabel, weatherDescriptionLabel, temperatureLabel, userActionLabel]
         let labelTextColor: UIColor?
-
+        
+        // достаем экземпляр структуры WeatherElement
         if city?.weatherData!.weather.indices != nil {
-//            достаем экземпляр структуры WeatherElement
             let weather = city?.weatherData!.weather[0]
             let weatherIcon = String(weather!.icon.suffix(1))
-    
-        switch weatherIcon {
-        case "d":
-            view.setGradientBackground(from: UIColor(named: "dayGradientStart")!, to: UIColor(named: "dayGradientEnd")!)
             
-            navigationController?.navigationBar.tintColor = UIColor(named: "dayTextColor")
+            switch weatherIcon {
+            case "d":
+                view.setGradientBackground(from: UIColor(named: "dayGradientStart")!, to: UIColor(named: "dayGradientEnd")!)
+                
+                navigationController?.navigationBar.tintColor = UIColor(named: "dayTextColor")
+                
+                labelTextColor = UIColor(named: "dayTextColor")
+            default:
+                view.setGradientBackground(from: UIColor(named: "nightGradientStart")!, to: UIColor(named: "nightGradientEnd")!)
+                
+                navigationController?.navigationBar.tintColor = UIColor(named: "nightTextColor")
+                
+                labelTextColor = UIColor(named: "nightTextColor")
+                break
+            }
             
-            labelTextColor = UIColor(named: "dayTextColor")
-        default:
-            view.setGradientBackground(from: UIColor(named: "nightGradientStart")!, to: UIColor(named: "nightGradientEnd")!)
+            labels.forEach { label in
+                label?.textColor = labelTextColor
+            }
             
-            navigationController?.navigationBar.tintColor = UIColor(named: "nightTextColor")
-            
-            labelTextColor = UIColor(named: "nightTextColor")
-            break
         }
-        
-        labels.forEach { label in
-            label?.textColor = labelTextColor
-        }
-        
     }
-}
 }
