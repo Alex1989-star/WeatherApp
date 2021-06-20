@@ -62,28 +62,29 @@ class CityTableViewController: UITableViewController {
     }
     
     @objc private func addCityButtonTapped() {
-        let alert = UIAlertController(title: "Введите название города", message: nil, preferredStyle: .alert)
+            let alert = UIAlertController(title: "Введите название города", message: nil, preferredStyle: .alert)
         
-        let appendButton = UIAlertAction(title: "Добавить", style: .default) {
-            (action) in
-        //    Получаем текст из TextField
-//            let textField = alert.textFields?.first
+            let appendButton = UIAlertAction(title: "Добавить", style: .default) {
+                _ in
+                let textField = alert.textFields?.first?.text
+                let newCity = [City(cityName: textField!, weatherData: nil)]
+                self.filteredCities.append(contentsOf: newCity)
+                self.tableView.reloadData()
+            }
             
+            let cancelButton = UIAlertAction(title: "Отмена", style: .cancel, handler: nil)
+            
+            alert.addAction(appendButton)
+            alert.addAction(cancelButton)
+            
+            alert.addTextField {(textField) in
+                textField.placeholder = "Название города"
+                textField.keyboardType = .default
+            }
+            present(alert, animated: true)
         }
-        
-        let cancelButton = UIAlertAction(title: "Отмена", style: .cancel, handler: nil)
-        
-        alert.addAction(appendButton)
-        alert.addAction(cancelButton)
-        
-        alert.addTextField {(textField) in
-            textField.placeholder = "Название города"
-        }
-        
-        present(alert, animated: true)
-    }
-}
 
+    }
 // MARK: - Extensions
 extension CityTableViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
