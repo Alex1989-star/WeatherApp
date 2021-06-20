@@ -67,8 +67,9 @@ class CityTableViewController: UITableViewController {
             let appendButton = UIAlertAction(title: "Добавить", style: .default) {
                 _ in
                 let textField = alert.textFields?.first?.text
-                let newCity = [City(cityName: textField!, weatherData: nil)]
-                self.filteredCities.append(contentsOf: newCity)
+                let newCity = City(cityName: textField!, weatherData: nil)
+                self.filteredCities.append(newCity)
+                self.cities.append(newCity)
                 self.tableView.reloadData()
             }
             
