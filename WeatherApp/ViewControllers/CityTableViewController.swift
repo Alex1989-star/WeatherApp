@@ -26,12 +26,12 @@ class CityTableViewController: UITableViewController {
         configureNavigationBar()
         configureSearchBar()
         configureTableView()
-        configureUIView()
+        configureCitiesScreen()
     }
     
     // MARK: - Methods
     
-    private func configureUIView() {
+    private func configureCitiesScreen() {
         view.backgroundColor = UIColor(named: "dayGradientEnd")
         tableView.tableFooterView = UIView()
     }
