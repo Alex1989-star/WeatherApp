@@ -64,7 +64,7 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="28.5" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X1B-sZ-XfO">
                                                     <rect key="frame" x="278" y="0.0" width="116" height="45.5"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="80" id="zaG-My-CJS"/>
+                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="90" id="zaG-My-CJS"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" weight="thin" pointSize="38"/>
                                                     <nil key="textColor"/>
