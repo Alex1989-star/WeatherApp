@@ -5,12 +5,7 @@
 
 import UIKit
 
-enum UserActions: String {
-    case wearVeryWarmClothes = "Рекмендуем одеть две пары носков, штаны с начесом и теплую куртку - на улице холодно🥶"
-    case wearWarmClothes = "Рекомендуем одеть демисизонную куртку и штаны - точно не замерзните 😉"
-    case wearLightClothes = "Рекомендуем одеть легкую куртку или кофту 💨"
-    case eatIceCreamAndSwim = "Рекомендуем раздеться, есть побольше мороженного и купаться ☀️"
-}
+
 
 class DetailsViewController: UIViewController {
     
@@ -70,13 +65,13 @@ class DetailsViewController: UIViewController {
         if let temperature = city?.weatherData?.main.temp {
             switch Int(temperature) {
             case 0...9:
-                label.text = UserActions.wearVeryWarmClothes.rawValue
+                label.text = WeatherUserAction.wearVeryWarmClothes.rawValue
             case 10...15:
-                label.text = UserActions.wearWarmClothes.rawValue
+                label.text = WeatherUserAction.wearWarmClothes.rawValue
             case 16...23:
-                label.text = UserActions.wearLightClothes.rawValue
+                label.text = WeatherUserAction.wearLightClothes.rawValue
             case 23...50:
-                label.text = UserActions.eatIceCreamAndSwim.rawValue
+                label.text = WeatherUserAction.eatIceCreamAndSwim.rawValue
             default:
                 break
             }
@@ -91,7 +86,10 @@ class DetailsViewController: UIViewController {
     
     private func configureByDay() {
         let userActionLabel = createLabelForUserActions()
-        let labels = [cityNameLabel, weatherDescriptionLabel, temperatureLabel, userActionLabel]
+        let labels = [cityNameLabel,
+                      weatherDescriptionLabel,
+                      temperatureLabel,
+                      userActionLabel]
         let labelTextColor: UIColor?
         
         // достаем экземпляр структуры WeatherElement
@@ -101,13 +99,17 @@ class DetailsViewController: UIViewController {
             
             switch weatherIcon {
             case "d":
-                view.setGradientBackground(from: UIColor(named: "dayGradientStart")!, to: UIColor(named: "dayGradientEnd")!)
+                view.setGradientBackground(
+                    from: UIColor(named: "dayGradientStart")!,
+                    to: UIColor(named: "dayGradientEnd")!)
                 
                 navigationController?.navigationBar.tintColor = UIColor(named: "dayTextColor")
                 
                 labelTextColor = UIColor(named: "dayTextColor")
             default:
-                view.setGradientBackground(from: UIColor(named: "nightGradientStart")!, to: UIColor(named: "nightGradientEnd")!)
+                view.setGradientBackground(
+                    from: UIColor(named: "nightGradientStart")!,
+                    to: UIColor(named: "nightGradientEnd")!)
                 
                 navigationController?.navigationBar.tintColor = UIColor(named: "nightTextColor")
                 

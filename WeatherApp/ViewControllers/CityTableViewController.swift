@@ -26,20 +26,29 @@ class CityTableViewController: UITableViewController {
         configureNavigationBar()
         configureSearchBar()
         configureTableView()
+        configureUIView()
     }
     
     // MARK: - Methods
+    
+    private func configureUIView() {
+        view.backgroundColor = UIColor(named: "dayGradientEnd")
+        tableView.tableFooterView = UIView()
+    }
+    
     private func configureNavigationBar() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(addCityButtonTapped))
         
         title = "Выберите город"
         navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.barTintColor =  UIColor(named: "dayGradientEnd")
     }
     
     private func configureSearchBar() {
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.placeholder = "Поиск города"
+        searchController.searchBar.backgroundColor =  UIColor(named: "dayGradientEnd")
         
         navigationItem.searchController = searchController
         definesPresentationContext = true
@@ -89,6 +98,7 @@ extension CityTableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: Identifier.cityCell.rawValue, for: indexPath) as! CityTableViewCell
 
         let cityWeather =  filteredCities[indexPath.row]
+        cell.backgroundColor = .clear
         cell.cityNameLabel.text = cityWeather.cityName
         
         // тут запрашиваем у сервиса погоду для города в списке
@@ -108,7 +118,7 @@ extension CityTableViewController {
                     let weather = cityWeaherData.weather[0]
                     
                     cell.weatherDescriptionLabel.text = weather.weatherDescription
-                    cell.temperatureLabel.text = String(format: "%.1f", result.main.temp)
+                    cell.temperatureLabel.text = "\(String(format: "%.1f", result.main.temp))º"
                 }
               
             }
@@ -125,8 +135,9 @@ extension CityTableViewController {
         guard let detailsVC = storyboard?.instantiateViewController(identifier: Identifier.detailsVC.rawValue) as? DetailsViewController else {
             return
         }
-        
         detailsVC.city = filteredCities[indexPath.row]
+        
+        tableView.deselectRow(at: indexPath, animated: true)
         
         navigationController?.pushViewController(detailsVC, animated: true)
     }

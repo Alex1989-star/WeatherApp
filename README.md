@@ -6,3 +6,4 @@ WeatherApp - team work
 Состав команды:
 
 - Сергей Воробьев (@codensk)
+- Екатерина Боровкова (@kateyka666)
