@@ -7,3 +7,6 @@ WeatherApp - team work
 
 - Сергей Воробьев (@codensk)
 - Екатерина Боровкова (@kateyka666)
+- Тарас Панин (@TarasMaraz)
+- Алексей Шипилов (@Alex1989-star)
+- Виктор Бугреев (@Falikor)
