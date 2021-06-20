@@ -13,9 +13,7 @@ enum Identifier: String {
 class CityTableViewController: UITableViewController {
     // MARK: - Properties
     private var searchController = UISearchController(searchResultsController: nil)
-
-    private var cities: [City]! // массив с моделями городов
-    
+    private var cities: [City]!
     private var filteredCities = [City]()
 
     // MARK: - Life Cycle
@@ -23,12 +21,11 @@ class CityTableViewController: UITableViewController {
         super.viewDidLoad()
         
         cities = City.getDemoCities()
-
+        filteredCities = cities
+        
         configureNavigationBar()
         configureSearchBar()
         configureTableView()
-        
-        filteredCities = cities
     }
     
     // MARK: - Methods
@@ -81,18 +78,17 @@ class CityTableViewController: UITableViewController {
 // MARK: - Extensions
 extension CityTableViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
-        
         return 1
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.filteredCities.count
+        return filteredCities.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Identifier.cityCell.rawValue, for: indexPath) as! CityTableViewCell
 
-        let cityWeather = cities[indexPath.row]
+        let cityWeather =  filteredCities[indexPath.row]
         cell.cityNameLabel.text = cityWeather.cityName
         
         // тут запрашиваем у сервиса погоду для города в списке
@@ -101,12 +97,10 @@ extension CityTableViewController {
                 return
             }
             
-            self.cities[indexPath.row].weatherData = result // тут в модель погоды города записывааем полученные от АПИ данные
+            self.filteredCities[indexPath.row].weatherData = result
             
-            
-            // обновлять UI можно только в главном потоке так как запрос к АПИ происходит асинхронно
             DispatchQueue.main.async {
-                guard let cityWeaherData = self.cities[indexPath.row].weatherData else {
+                guard let cityWeaherData = self.filteredCities[indexPath.row].weatherData else {
                     return
                 }
                 
@@ -132,7 +126,7 @@ extension CityTableViewController {
             return
         }
         
-        detailsVC.city = cities[indexPath.row]
+        detailsVC.city = filteredCities[indexPath.row]
         
         navigationController?.pushViewController(detailsVC, animated: true)
     }
@@ -146,7 +140,7 @@ extension CityTableViewController: UISearchResultsUpdating {
         } else {
             filteredCities = cities.filter({ $0.cityName.lowercased().contains(searchController.searchBar.text!.lowercased()) })
         }
+        
         self.tableView.reloadData()
-
     }
 }
