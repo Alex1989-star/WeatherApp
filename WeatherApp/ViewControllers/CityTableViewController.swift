@@ -15,7 +15,7 @@ class CityTableViewController: UITableViewController {
     private var searchController = UISearchController(searchResultsController: nil)
     private var cities: [City]!
     private var filteredCities = [City]()
-
+    
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,30 +28,16 @@ class CityTableViewController: UITableViewController {
         configureTableView()
         configureCitiesScreen()
         
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.up.arrow.down"),
-                                                                style: .plain,
-                                                                target: self,
-                                                                action: #selector(sortedCity))
     }
     
-    @objc
-        func sortedCity() {
-            if self.isEditing == false {
-            self.isEditing = true
-            } else {
-            self.isEditing = false
-            }
-        }
-
-    
     // MARK: - Methods
-    
     private func configureCitiesScreen() {
         view.backgroundColor = UIColor(named: "dayGradientEnd")
         tableView.tableFooterView = UIView()
     }
     
     private func configureNavigationBar() {
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.up.arrow.down"), style: .plain, target: self, action: #selector(sortButtonTapped))
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(addCityButtonTapped))
         
         title = "Выберите город"
@@ -77,30 +63,39 @@ class CityTableViewController: UITableViewController {
     }
     
     @objc private func addCityButtonTapped() {
-            let alert = UIAlertController(title: "Введите название города", message: nil, preferredStyle: .alert)
+        let alert = UIAlertController(title: "Введите название города", message: nil, preferredStyle: .alert)
         
-            let appendButton = UIAlertAction(title: "Добавить", style: .default) {
-                _ in
-                let textField = alert.textFields?.first?.text
-                let newCity = City(cityName: textField!, weatherData: nil)
-                self.filteredCities.append(newCity)
-                self.cities.append(newCity)
-                self.tableView.reloadData()
-            }
-            
-            let cancelButton = UIAlertAction(title: "Отмена", style: .cancel, handler: nil)
-            
-            alert.addAction(appendButton)
-            alert.addAction(cancelButton)
-            
-            alert.addTextField {(textField) in
-                textField.placeholder = "Название города"
-                textField.keyboardType = .default
-            }
-            present(alert, animated: true)
+        let appendButton = UIAlertAction(title: "Добавить", style: .default) {
+            _ in
+            let textField = alert.textFields?.first?.text
+            let newCity = City(cityName: textField!, weatherData: nil)
+            self.filteredCities.append(newCity)
+            self.cities.append(newCity)
+            self.tableView.reloadData()
         }
-
+        
+        let cancelButton = UIAlertAction(title: "Отмена", style: .cancel, handler: nil)
+        
+        alert.addAction(appendButton)
+        alert.addAction(cancelButton)
+        
+        alert.addTextField {(textField) in
+            textField.placeholder = "Название города"
+            textField.keyboardType = .default
+        }
+        present(alert, animated: true)
     }
+    
+    @objc private func sortButtonTapped() {
+        if !isEditing {
+            isEditing.toggle()
+        } else {
+            isEditing.toggle()
+        }
+    }
+
+    
+}
 // MARK: - Extensions
 extension CityTableViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -113,7 +108,7 @@ extension CityTableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Identifier.cityCell.rawValue, for: indexPath) as! CityTableViewCell
-
+        
         let cityWeather =  filteredCities[indexPath.row]
         cell.backgroundColor = .clear
         cell.cityNameLabel.text = cityWeather.cityName
@@ -137,33 +132,33 @@ extension CityTableViewController {
                     cell.weatherDescriptionLabel.text = weather.weatherDescription
                     cell.temperatureLabel.text = "\(String(format: "%.1f", result.main.temp))º"
                 }
-              
+                
             }
         }
-    
+        
         return cell
     }
     
     override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-            return .delete
+        return .delete
+    }
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            tableView.beginUpdates()
+            filteredCities.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            tableView.endUpdates()
         }
-        override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-            if editingStyle == .delete {
-                tableView.beginUpdates()
-                filteredCities.remove(at: indexPath.row)
-                tableView.deleteRows(at: [indexPath], with: .fade)
-                tableView.endUpdates()
-            }
-        }
-        override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-            let elementToMove = filteredCities[fromIndexPath.row]
-            filteredCities.remove(at: fromIndexPath.row)
-            filteredCities.insert(elementToMove, at: to.row)
-        }
-
-        override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-            return true
-        }
+    }
+    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+        let elementToMove = filteredCities[fromIndexPath.row]
+        filteredCities.remove(at: fromIndexPath.row)
+        filteredCities.insert(elementToMove, at: to.row)
+    }
+    
+    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let detailsVC = storyboard?.instantiateViewController(identifier: Identifier.detailsVC.rawValue) as? DetailsViewController else {
@@ -179,7 +174,7 @@ extension CityTableViewController {
 }
 
 extension CityTableViewController: UISearchResultsUpdating {
-     func updateSearchResults(for searchController: UISearchController) {
+    func updateSearchResults(for searchController: UISearchController) {
         if searchController.searchBar.text! == "" {
             filteredCities = cities
         } else {
