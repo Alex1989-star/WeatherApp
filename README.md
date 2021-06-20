@@ -5,4 +5,4 @@ WeatherApp - team work
 
 Состав команды:
 
-- Сергей Воробьев (@rusbear28)
+- Сергей Воробьев (@codensk)
