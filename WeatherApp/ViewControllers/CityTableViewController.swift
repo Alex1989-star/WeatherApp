@@ -27,7 +27,22 @@ class CityTableViewController: UITableViewController {
         configureSearchBar()
         configureTableView()
         configureCitiesScreen()
+        
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.up.arrow.down"),
+                                                                style: .plain,
+                                                                target: self,
+                                                                action: #selector(sortedCity))
     }
+    
+    @objc
+        func sortedCity() {
+            if self.isEditing == false {
+            self.isEditing = true
+            } else {
+            self.isEditing = false
+            }
+        }
+
     
     // MARK: - Methods
     
@@ -128,9 +143,26 @@ extension CityTableViewController {
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        
-    }
+    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+            return .delete
+        }
+        override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+            if editingStyle == .delete {
+                tableView.beginUpdates()
+                filteredCities.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .fade)
+                tableView.endUpdates()
+            }
+        }
+        override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+            let elementToMove = filteredCities[fromIndexPath.row]
+            filteredCities.remove(at: fromIndexPath.row)
+            filteredCities.insert(elementToMove, at: to.row)
+        }
+
+        override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+            return true
+        }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let detailsVC = storyboard?.instantiateViewController(identifier: Identifier.detailsVC.rawValue) as? DetailsViewController else {
