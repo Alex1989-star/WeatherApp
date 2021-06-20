@@ -26,7 +26,7 @@ class CityTableViewController: UITableViewController {
         configureNavigationBar()
         configureSearchBar()
         configureTableView()
-        configureUIView()
+        configureCitiesScreen()
         
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.up.arrow.down"),
                                                                 style: .plain,
@@ -46,7 +46,7 @@ class CityTableViewController: UITableViewController {
     
     // MARK: - Methods
     
-    private func configureUIView() {
+    private func configureCitiesScreen() {
         view.backgroundColor = UIColor(named: "dayGradientEnd")
         tableView.tableFooterView = UIView()
     }
